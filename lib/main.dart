@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'views/register.dart';
 import 'views/login.dart';
 
@@ -25,7 +26,8 @@ class OnMyWay extends StatelessWidget
 
     @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return const GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "OnMyWay",
       home: FormExampleApp(),
     );

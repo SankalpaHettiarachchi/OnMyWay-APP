@@ -120,10 +120,7 @@ class _FormExampleState extends State<FormExample> {
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
               onPressed: () {
-                Get.to(() => Login());
-                if (_formKey.currentState!.validate()) {
-                  // Process data.
-                }
+                Get.to(() => const Login());
               },
               child: const Text('Login Page'),
             ),
