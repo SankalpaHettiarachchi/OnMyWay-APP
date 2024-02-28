@@ -79,7 +79,7 @@ class _FormExampleState extends State<FormExample> {
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
               onPressed: () {
-                Get.to(() => const FormExampleApp());
+                Get.to(() => const Register());
               },
               child: const Text('Register Page'),
             ),

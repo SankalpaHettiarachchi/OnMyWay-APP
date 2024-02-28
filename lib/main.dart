@@ -28,7 +28,7 @@ class OnMyWay extends StatelessWidget
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "OnMyWay",
-      home: FormExampleApp(),
+      home: Register(),
     );
   }
 }

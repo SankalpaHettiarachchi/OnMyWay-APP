@@ -1,131 +1,107 @@
 import 'package:flutter/material.dart';
 import 'package:onmyway/views/login.dart';
+import './widgets/InputWidget.dart';
 import 'package:get/get.dart';
 
 /// Flutter code sample for [Form].
 
-void main() => runApp(const FormExampleApp());
+void main() => runApp(const Register());
 
-class FormExampleApp extends StatelessWidget {
-  const FormExampleApp({super.key});
+class Register extends StatelessWidget {
+  const Register({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('Register Form')),
-        body: const FormExample(),
+        body: const RegisterForm(),
       ),
     );
   }
 }
 
-class FormExample extends StatefulWidget {
-  const FormExample({super.key});
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({super.key});
 
   @override
-  State<FormExample> createState() => _FormExampleState();
+  State<RegisterForm> createState() => _RegisterFormleState();
 }
-
-class _FormExampleState extends State<FormExample> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class _RegisterFormleState extends State<RegisterForm> {
+  final TextEditingController _fnameController = TextEditingController();
+  final TextEditingController _lnameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            decoration: const InputDecoration(
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Register Page'),
+            const SizedBox(
+              height: 10,
+            ),
+            InputWidget(
               hintText: 'First Name',
+              controller: _fnameController,
+              obscureText: false,
             ),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
+            const SizedBox(
+              height: 10,
+            ),
+            InputWidget(
               hintText: 'Last Name',
+              controller: _lnameController,
+              obscureText: false,
             ),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
+            const SizedBox(
+              height: 10,
+            ),
+            InputWidget(
               hintText: 'Email',
+              controller: _emailController,
+              obscureText: false,
             ),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
+            const SizedBox(
+              height: 10,
+            ),
+            InputWidget(
               hintText: 'Phone',
+              controller: _phoneController,
+              obscureText: false,
             ),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
+            const SizedBox(
+              height: 10,
+            ),
+            InputWidget(
               hintText: 'Password',
+              controller: _passwordController,
+              obscureText: false,
             ),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-              hintText: 'Confirm password',
+            const SizedBox(
+              height: 10,
             ),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Validate will return true if the form is valid, or false if
-                // the form is invalid.
-                if (_formKey.currentState!.validate()) {
-                  // Process data.
-                }
-              },
-              child: const Text('Register'),
+            InputWidget(
+              hintText: 'Confirm Password',
+              controller: _confirmPasswordController,
+              obscureText: false,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                Get.to(() => const Login());
-              },
-              child: const Text('Login Page'),
+            const SizedBox(
+              height: 10,
             ),
-          ),
-        ],
+            ElevatedButton(onPressed: () {}, child: const Text("Register")),
+            ElevatedButton(
+                onPressed: () {
+                  Get.to(()=>const Login());
+                },
+                child: const Text("Login")),
+          ],
+        ),
       ),
     );
   }
