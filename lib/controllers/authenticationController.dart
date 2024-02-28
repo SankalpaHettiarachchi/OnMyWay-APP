@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +16,7 @@ class AuthenticationController extends GetxController {
     required String confirmPassword,
   }) async {
     try {
+
       isLoading.value = true;
       var data = {
         'fname': fname,
@@ -43,7 +43,7 @@ class AuthenticationController extends GetxController {
       }
     } catch (e) {
       isLoading.value = false;
-      debugPrint(e.toString());
+      debugPrint('Faild');
     }
   }
 }
