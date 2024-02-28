@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:onmyway/controllers/authenticationController.dart';
 import 'package:onmyway/views/login.dart';
 import './widgets/InputWidget.dart';
 import 'package:get/get.dart';
@@ -27,6 +28,7 @@ class RegisterForm extends StatefulWidget {
   @override
   State<RegisterForm> createState() => _RegisterFormleState();
 }
+
 class _RegisterFormleState extends State<RegisterForm> {
   final TextEditingController _fnameController = TextEditingController();
   final TextEditingController _lnameController = TextEditingController();
@@ -34,6 +36,7 @@ class _RegisterFormleState extends State<RegisterForm> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  final AuthenticationController _authenticationController = Get.put(AuthenticationController());
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +97,26 @@ class _RegisterFormleState extends State<RegisterForm> {
             const SizedBox(
               height: 10,
             ),
-            ElevatedButton(onPressed: () {}, child: const Text("Register")),
+            Obx(() {
+              return 
+              _authenticationController.isLoading.value ? const CircularProgressIndicator()
+              :ElevatedButton(
+                  onPressed: () async{
+                    await _authenticationController.register(
+                      fname: _fnameController.text.trim(), 
+                      lname: _lnameController.text.trim(), 
+                      email: _emailController.text.trim(), 
+                      phone: _phoneController.text.trim(), 
+                      password:_passwordController.text.trim(), 
+                      confirmPassword: _confirmPasswordController.text.trim()
+                      );
+                  },
+                  child: const Text("Register"));
+              
+            }),
             ElevatedButton(
                 onPressed: () {
-                  Get.to(()=>const Login());
+                  Get.to(() => const Login());
                 },
                 child: const Text("Login")),
           ],
