@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'views/register.dart';
-import 'views/login.dart';
 
 void main() {
   runApp(const OnMyWay());
