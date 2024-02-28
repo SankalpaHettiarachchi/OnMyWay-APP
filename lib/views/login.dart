@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:onmyway/views/register.dart';
 import 'package:get/get.dart';
+import './widgets/InputWidget.dart';
 
 
 class Login extends StatefulWidget {
@@ -16,75 +17,59 @@ class _LoginState extends State<Login>
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('Login Form')),
-        body: const FormExample(),
+        appBar: AppBar(title: const Text('OnMyWay')),
+        body: const LoginForm(),
       ),
     );
   }
 }
 
-class FormExample extends StatefulWidget {
-  const FormExample({super.key});
+class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
 
   @override
-  State<FormExample> createState() => _FormExampleState();
+  State<LoginForm> createState() => _LoginFormState();
 }
 
-class _FormExampleState extends State<FormExample> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class _LoginFormState extends State<LoginForm> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordontroller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            decoration: const InputDecoration(
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Login Form'),
+            const SizedBox(
+              height: 10,
+            ),
+            InputWidget(
               hintText: 'Email',
+              controller: _emailController,
+              obscureText: false,
             ),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
+            const SizedBox(
+              height: 10,
+            ),
+            InputWidget(
               hintText: 'Password',
+              controller: _passwordontroller,
+              obscureText: false,
             ),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Validate will return true if the form is valid, or false if
-                // the form is invalid.
-                if (_formKey.currentState!.validate()) {
-                  // Process data.
-                }
-              },
-              child: const Text('Login'),
+            const SizedBox(
+              height: 10,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                Get.to(() => const Register());
-              },
-              child: const Text('Register Page'),
-            ),
-          ),
-        ],
+            ElevatedButton(onPressed: () {}, child: const Text("Login")),
+            ElevatedButton(
+                onPressed: () {
+                  Get.to(()=>const Register());
+                },
+                child: const Text("Register")),
+          ],
+        ),
       ),
     );
   }

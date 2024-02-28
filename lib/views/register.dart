@@ -14,7 +14,7 @@ class Register extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('Register Form')),
+        appBar: AppBar(title: const Text('OnMyWay')),
         body: const RegisterForm(),
       ),
     );
@@ -42,7 +42,7 @@ class _RegisterFormleState extends State<RegisterForm> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Register Page'),
+            const Text('Register Form'),
             const SizedBox(
               height: 10,
             ),
