@@ -36,14 +36,14 @@ class AuthenticationController extends GetxController {
 
       if (response.statusCode == 201) {
         isLoading.value = false;
-        debugPrint(json.decode(response.body));
+        debugPrint(response.body);
       } else {
         isLoading.value = false;
-        debugPrint(json.decode(response.body));
+        debugPrint(response.body);
       }
     } catch (e) {
       isLoading.value = false;
-      debugPrint('Faild');
+      debugPrint(e.toString());
     }
   }
 }
