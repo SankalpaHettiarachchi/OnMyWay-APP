@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:onmyway/constants/constants.dart';
-import 'dart:convert';
 
 class AuthenticationController extends GetxController {
   final isLoading = false.obs;
