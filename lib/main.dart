@@ -1,34 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'views/register.dart';
+import 'package:onmyway/views/home.dart';
+import 'package:onmyway/views/login.dart';
+import 'package:get_storage/get_storage.dart';
 
 void main() {
   runApp(const OnMyWay());
 }
 
-class OnMyWay extends StatelessWidget
-{
+class OnMyWay extends StatelessWidget {
   const OnMyWay({super.key});
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(
-  //     title: "OnMyWay",
-  //     home: Scaffold(
-  //       appBar: AppBar(
-  //            title: const Text("OnMyWay"),
-  //            backgroundColor: Colors.blueAccent,
-  //       ),
-  //     ),
-  //   );
-  // }
-
-    @override
+  @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
+    final box = GetStorage();
+    final token = box.read('token');
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "OnMyWay",
-      home: Register(),
+      home: 
+      token == null ? const Login() : const Home(),
     );
   }
 }

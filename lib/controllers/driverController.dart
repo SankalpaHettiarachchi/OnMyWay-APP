@@ -25,6 +25,7 @@ class DriverController extends GetxController {
         Uri.parse(url + 'save_driver'),
         headers: {
           'Accept': 'application/json',
+          'Authorization': 'Bearer ${box.read('token')}',
         },
         body: data,
       );
