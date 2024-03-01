@@ -18,8 +18,7 @@ class OnMyWay extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "OnMyWay",
-      home: 
-      token == null ? const Login() : const Home(),
+      home: token == null ? const Login() : const Home(),
     );
   }
 }

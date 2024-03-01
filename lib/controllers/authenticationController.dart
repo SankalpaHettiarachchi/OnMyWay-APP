@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:onmyway/constants/constants.dart';
+import 'package:onmyway/views/driver.dart';
+import 'package:onmyway/views/addService.dart';
 import 'package:onmyway/views/home.dart';
 import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
@@ -78,6 +80,39 @@ class AuthenticationController extends GetxController {
       } else {
         isLoading.value = false;
         debugPrint(response.body);
+      }
+    } catch (e) {
+      isLoading.value = false;
+      debugPrint(e.toString());
+    }
+  }
+
+  Future driverAuthentcation() 
+  async 
+  {
+    try {
+      isLoading.value = true;
+      var response = await http.post(
+        Uri.parse(url + 'check_driver'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${box.read('token')}',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        isLoading.value = false;
+        var responseBody = json.decode(response.body);
+        var isDriver = responseBody['isDriver'];
+
+        if (isDriver) {
+          Get.offAll(() => const AddService());
+        } else {
+          Get.offAll(() => const Driver());
+        }
+
+      } else {
+        isLoading.value = false;
       }
     } catch (e) {
       isLoading.value = false;
