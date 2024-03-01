@@ -3,7 +3,6 @@ import './widgets/InputWidget.dart';
 import 'package:onmyway/controllers/driverController.dart';
 import 'package:get/get.dart';
 
-
 class Driver extends StatefulWidget {
   const Driver({super.key});
 

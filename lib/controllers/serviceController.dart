@@ -1,29 +1,35 @@
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:onmyway/constants/constants.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:onmyway/views/addService.dart';
 
-class DriverController extends GetxController {
+class ServiceController extends GetxController 
+{
   final isLoading = false.obs;
   final token = ''.obs;
   final box = GetStorage();
 
-  Future saveDriver({
-    required String Vehicle_no,
-    required String License_no,
+  Future addService({
+    required String vehicle_id,
+    required String start,
+    required String destination,
+    required String current,
+    required String status,
   })
-  async {
+   async {
     try {
       isLoading.value = true;
       var data = {
-        'vehicle_id': Vehicle_no,
-        'license_id': License_no,
+        'vehicle_id': vehicle_id,
+        'start': start,
+        'destination': destination,
+        'current': current,
+        'status': status,
       };
 
       var response = await http.post(
-        Uri.parse(url + 'save_driver'),
+        Uri.parse(url + 'save_service'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer ${box.read('token')}',
@@ -34,7 +40,6 @@ class DriverController extends GetxController {
       if (response.statusCode == 201) {
         isLoading.value = false;
         debugPrint(response.body);
-        Get.to(() => const AddService());
       } else {
         isLoading.value = false;
         debugPrint(response.body);
