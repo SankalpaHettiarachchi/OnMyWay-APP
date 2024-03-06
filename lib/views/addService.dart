@@ -75,6 +75,20 @@ class _AddServiceState extends State<AddService> {
                       child: const Text("Save Service")
                     );
             }),
+             Obx(() {
+              return _serviceController.isLoading.value ? const CircularProgressIndicator() : ElevatedButton(
+                      onPressed: () async {
+                        await _serviceController.addService(
+                          vehicle_id: _vehicleIdController.text.trim(), 
+                          start: _startController.text.trim(), 
+                          destination: _destinationController.text.trim(), 
+                          current: _currentController.text.trim(), 
+                          status: _stateController.text.trim(),
+                          );
+                      },
+                      child: const Text("MAP-Driver")
+                    );
+            }),
           ],
         ),
       ),
