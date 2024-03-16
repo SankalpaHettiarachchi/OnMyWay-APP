@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:onmyway/controllers/serviceController.dart';
+import 'package:onmyway/views/driverMap.dart';
 import './widgets/InputWidget.dart';
 
 class AddService extends StatefulWidget {
@@ -75,20 +76,11 @@ class _AddServiceState extends State<AddService> {
                       child: const Text("Save Service")
                     );
             }),
-             Obx(() {
-              return _serviceController.isLoading.value ? const CircularProgressIndicator() : ElevatedButton(
-                      onPressed: () async {
-                        await _serviceController.addService(
-                          vehicle_id: _vehicleIdController.text.trim(), 
-                          start: _startController.text.trim(), 
-                          destination: _destinationController.text.trim(), 
-                          current: _currentController.text.trim(), 
-                          status: _stateController.text.trim(),
-                          );
-                      },
-                      child: const Text("MAP-Driver")
-                    );
-            }),
+            ElevatedButton(
+                onPressed: () {
+                  Get.to(() => const DriverMap());
+                },
+                child: const Text("Driver-Map")),
           ],
         ),
       ),

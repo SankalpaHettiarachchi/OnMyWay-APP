@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:onmyway/controllers/authenticationController.dart';
-import 'package:onmyway/views/driver.dart';
 import 'package:onmyway/views/customer.dart';
 
 class Home extends StatefulWidget {
