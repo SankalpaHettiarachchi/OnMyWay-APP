@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -12,8 +14,13 @@ class DriverMap extends StatefulWidget {
 
 class _DriverMapState extends State<DriverMap> {
   Location _locationController = new Location();
-  static const LatLng _mihinthale =LatLng(8.358727143281959, 80.51152191826883);
-  static const LatLng _galkulama = LatLng(8.276925121514413, 80.49885919318024);
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
+
+  static const LatLng _mihinthale =
+      LatLng(8.358727143281959, 80.51152191826883);
+
+  static const LatLng _yapane_junc = LatLng(8.355567, 80.417037);
 
   LatLng? _currentP = null;
 
@@ -26,22 +33,31 @@ class _DriverMapState extends State<DriverMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: _mihinthale,
-          zoom: 13,
-        ),
-        markers: {
-          Marker(
-              markerId: MarkerId("_currentLocation"),
-              icon: BitmapDescriptor.defaultMarker,
-              position: _mihinthale),
-          Marker(
-              markerId: MarkerId("_destination"),
-              icon: BitmapDescriptor.defaultMarker,
-              position: _galkulama)
-        },
-      ),
+      body: _currentP == null
+          ? Center(
+              child: Text('Loading..'),
+            )
+          : GoogleMap(
+            onMapCreated: ((GoogleMapController controller)=>_mapController.complete(controller)),
+              initialCameraPosition: CameraPosition(
+                target: _mihinthale,
+                zoom: 13,
+              ),
+              markers: {
+                Marker(
+                    markerId: MarkerId("_liveLocation"),
+                    icon: BitmapDescriptor.defaultMarker,
+                    position: _currentP!),
+                Marker(
+                    markerId: MarkerId("_sourceLocation"),
+                    icon: BitmapDescriptor.defaultMarker,
+                    position: _mihinthale),
+                Marker(
+                    markerId: MarkerId("_destination"),
+                    icon: BitmapDescriptor.defaultMarker,
+                    position: _yapane_junc)
+              },
+            ),
     );
   }
 
@@ -70,7 +86,9 @@ class _DriverMapState extends State<DriverMap> {
         setState(() {
           _currentP =
               LatLng(currentLocation.latitude!, currentLocation.longitude!);
-          print(_currentP);
+              print("Start Location : - $_mihinthale");
+              print("Live Location : - $_currentP");
+              print("End Location : - $_yapane_junc");
         });
       }
     });
