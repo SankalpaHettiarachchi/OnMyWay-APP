@@ -11,10 +11,10 @@ class DriverMap extends StatefulWidget {
 }
 
 class _DriverMapState extends State<DriverMap> {
-  Location _locationController = Location();
-  static const LatLng _mihinthale =
-      LatLng(8.358727143281959, 80.51152191826883);
+  Location _locationController = new Location();
+  static const LatLng _mihinthale =LatLng(8.358727143281959, 80.51152191826883);
   static const LatLng _galkulama = LatLng(8.276925121514413, 80.49885919318024);
+
   LatLng? _currentP = null;
 
   @override
