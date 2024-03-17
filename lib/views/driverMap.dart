@@ -38,7 +38,8 @@ class _DriverMapState extends State<DriverMap> {
               child: Text('Loading..'),
             )
           : GoogleMap(
-            onMapCreated: ((GoogleMapController controller)=>_mapController.complete(controller)),
+              onMapCreated: ((GoogleMapController controller) =>
+                  _mapController.complete(controller)),
               initialCameraPosition: CameraPosition(
                 target: _mihinthale,
                 zoom: 13,
@@ -59,6 +60,14 @@ class _DriverMapState extends State<DriverMap> {
               },
             ),
     );
+  }
+
+  Future<void> _cameraToPosition(LatLng pos) async {
+    final GoogleMapController controller = await _mapController.future;
+    CameraPosition _newCameraPosition = CameraPosition(target: pos, zoom: 13);
+    await controller.animateCamera(
+      CameraUpdate.newCameraPosition(_newCameraPosition),
+      );
   }
 
   Future<void> getLocationUpdate() async {
@@ -86,9 +95,9 @@ class _DriverMapState extends State<DriverMap> {
         setState(() {
           _currentP =
               LatLng(currentLocation.latitude!, currentLocation.longitude!);
-              print("Start Location : - $_mihinthale");
-              print("Live Location : - $_currentP");
-              print("End Location : - $_yapane_junc");
+          print("Start Location : - $_mihinthale");
+          print("Live Location : - $_currentP");
+          print("End Location : - $_yapane_junc");
         });
       }
     });
