@@ -1,9 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:onmyway/constants/constants.dart';
 
 class DriverMap extends StatefulWidget {
   const DriverMap({super.key});
@@ -23,11 +23,16 @@ class _DriverMapState extends State<DriverMap> {
   static const LatLng _yapane_junc = LatLng(8.355567, 80.417037);
 
   LatLng? _currentP = null;
+  Map<PolylineId, Polyline> polylines = {};
 
   @override
   void initState() {
     super.initState();
-    getLocationUpdate();
+    getLocationUpdate().then((_) => {
+          getPolyLinePoints().then((coordinates) => {
+                generatePolyLineFromPoints(coordinates),
+              }),
+        });
   }
 
   @override
@@ -58,6 +63,7 @@ class _DriverMapState extends State<DriverMap> {
                     icon: BitmapDescriptor.defaultMarker,
                     position: _yapane_junc)
               },
+              polylines: Set<Polyline>.of(polylines.values),
             ),
     );
   }
@@ -67,7 +73,7 @@ class _DriverMapState extends State<DriverMap> {
     CameraPosition _newCameraPosition = CameraPosition(target: pos, zoom: 13);
     await controller.animateCamera(
       CameraUpdate.newCameraPosition(_newCameraPosition),
-      );
+    );
   }
 
   Future<void> getLocationUpdate() async {
@@ -95,11 +101,47 @@ class _DriverMapState extends State<DriverMap> {
         setState(() {
           _currentP =
               LatLng(currentLocation.latitude!, currentLocation.longitude!);
+          // _cameraToPosition(_currentP!);
           print("Start Location : - $_mihinthale");
           print("Live Location : - $_currentP");
           print("End Location : - $_yapane_junc");
         });
       }
     });
+  }
+
+  Future<List<LatLng>> getPolyLinePoints() async {
+    List<LatLng> polyLineCoordinates = [];
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      GOOGLE_MAPS_API_KEY,
+      PointLatLng(_mihinthale.latitude, _mihinthale.longitude),
+      PointLatLng(_yapane_junc.latitude, _yapane_junc.longitude),
+      travelMode: TravelMode.driving,
+    );
+    print(result);
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polyLineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    } else {
+      print(result.errorMessage);
+    }
+    return polyLineCoordinates;
+  }
+
+  void generatePolyLineFromPoints(List<LatLng> polyLineCoordinates) async {
+    PolylineId id = PolylineId("Poly");
+    Polyline polyline = Polyline(
+        polylineId: id,
+        color: Colors.black,
+        points: polyLineCoordinates,
+        width: 8);
+    setState(
+      () {
+        polylines[id] = polyline;
+      },
+    );
   }
 }
