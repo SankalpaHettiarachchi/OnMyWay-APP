@@ -52,15 +52,18 @@ class _DriverMapState extends State<DriverMap> {
               markers: {
                 Marker(
                     markerId: MarkerId("_liveLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
+                    infoWindow: InfoWindow(title:"OnMyWay...."),
+                    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
                     position: _currentP!),
                 Marker(
                     markerId: MarkerId("_sourceLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
+                    infoWindow: InfoWindow(title:"Start"),
+                    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
                     position: _mihinthale),
                 Marker(
                     markerId: MarkerId("_destination"),
-                    icon: BitmapDescriptor.defaultMarker,
+                    infoWindow: InfoWindow(title:"Destination"),
+                    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
                     position: _yapane_junc)
               },
               polylines: Set<Polyline>.of(polylines.values),
