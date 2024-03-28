@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:onmyway/views/functions/location_services.dart';
 
@@ -13,8 +14,13 @@ class CustomerMap extends StatefulWidget {
 class MapSampleState extends State<CustomerMap> {
   Set<Marker> _markers = Set<Marker>();
   Set<Polygon> _polygons = Set<Polygon>();
+  Set<Polyline> _polylines = Set<Polyline>();
 
-  TextEditingController _searchController = TextEditingController();
+  int _polylineIdCounter = 1;
+
+  TextEditingController _originController = TextEditingController();
+  TextEditingController _destinationController = TextEditingController();
+
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
@@ -40,6 +46,24 @@ class MapSampleState extends State<CustomerMap> {
     });
   }
 
+  void _setPolyline(List<PointLatLng> points) {
+    final String polylineIdval = 'polyline_$_polylineIdCounter';
+    _polylineIdCounter++;
+
+    _polylines.add(
+      Polyline(
+        polylineId: PolylineId(polylineIdval),
+        width: 2,
+        color: Colors.blue,
+        points: points
+            .map(
+              (point) => LatLng(point.latitude, point.longitude),
+            )
+            .toList(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,24 +76,41 @@ class MapSampleState extends State<CustomerMap> {
           Row(
             children: [
               Expanded(
-                  child: TextFormField(
-                controller: _searchController,
-                textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(hintText: 'Start Location'),
-                onChanged: (value) {
-                  print(value);
-                },
+                  child: Column(
+                children: [
+                  TextFormField(
+                    controller: _originController,
+                    decoration: InputDecoration(hintText: 'Start Location'),
+                    onChanged: (value) {
+                      print(value);
+                    },
+                  ),
+                  TextFormField(
+                    controller: _destinationController,
+                    decoration: InputDecoration(hintText: 'End Location'),
+                    onChanged: (value) {
+                      print(value);
+                    },
+                  ),
+                ],
               )),
               IconButton(
                 onPressed: () async {
-                  var place =
-                      await LocationService().getPlace(_searchController.text);
-                  _goToCity(place);
+                  var directions = await LocationService().getDirection(
+                      _originController.text, _destinationController.text);
+                  _goToCity(
+                    directions['start_location']['lat'],
+                    directions['start_location']['lng'],
+                    directions['bounds_ne'],
+                    directions['bounds_sw'],
+                  );
+
+                  _setPolyline(directions['polyline_decoded']);
                 },
                 icon: Icon(
                   Icons.search,
                 ),
-              )
+              ),
             ],
           ),
           Expanded(
@@ -77,6 +118,7 @@ class MapSampleState extends State<CustomerMap> {
               mapType: MapType.terrain,
               markers: _markers,
               polygons: _polygons,
+              polylines: _polylines,
               initialCameraPosition: _kGooglePlex,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
@@ -88,9 +130,14 @@ class MapSampleState extends State<CustomerMap> {
     );
   }
 
-  Future<void> _goToCity(Map<String, dynamic> place) async {
-    final double lat = place['geometry']['location']['lat'];
-    final double lng = place['geometry']['location']['lng'];
+  Future<void> _goToCity(
+    double lat,
+    double lng,
+    Map<String, dynamic> boundsNe,
+    Map<String, dynamic> boundsSw,
+  ) async {
+    // final double lat = place['geometry']['location']['lat'];
+    // final double lng = place['geometry']['location']['lng'];
 
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(
@@ -100,6 +147,14 @@ class MapSampleState extends State<CustomerMap> {
           zoom: 12,
         ),
       ),
+    );
+    controller.animateCamera(
+      CameraUpdate.newLatLngBounds(
+        LatLngBounds(
+          southwest: LatLng(boundsSw['lat'], boundsSw['lng']),
+          northeast: LatLng(boundsNe['lat'], boundsNe['lng']),
+        ),
+        25),
     );
     _setMarker(LatLng(lat, lng));
   }
