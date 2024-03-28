@@ -80,7 +80,8 @@ class _AddServiceState extends State<AddService> {
                 onPressed: () {
                   Get.to(() => const DriverMap());
                 },
-                child: const Text("Driver-Map")),
+                child: const Text("Driver-Map")
+                ),
           ],
         ),
       ),

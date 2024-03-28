@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:onmyway/views/customerMap.dart';
 import 'package:onmyway/views/home.dart';
 import 'package:onmyway/views/login.dart';
+import 'package:onmyway/views/home.dart';
+import 'package:onmyway/views/addCustomer.dart';
 import 'package:get_storage/get_storage.dart';
 
 void main() {
@@ -18,7 +21,8 @@ class OnMyWay extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "OnMyWay",
-      home: token == null ? const Login() : const Home(),
+      // home: token == null ? const Login() : const Home(),
+      home: Customer(),
     );
   }
 }

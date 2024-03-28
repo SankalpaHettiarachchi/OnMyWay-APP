@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:onmyway/views/customerMap.dart';
 import 'package:onmyway/controllers/customerController.dart';
 import './widgets/InputWidget.dart';
 
@@ -49,12 +50,18 @@ class _CustomerState extends State<Customer> {
                   : ElevatedButton(
                       onPressed: () async {
                         await _customerController.saveCustomer(
-                          cargoType: _cargoTypeController.text.trim(), 
+                          cargoType: _cargoTypeController.text.trim(),
                           avgWeight: _avgWeightController.text.trim());
                       },
                       child: const Text("Save Customer")
                     );
             }),
+            ElevatedButton(
+                onPressed: () {
+                  Get.to(() => const CustomerMap());
+                },
+                child: const Text("Customer-Map")
+                )
           ],
         ),
       ),

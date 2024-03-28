@@ -44,7 +44,8 @@ class _DriverMapState extends State<DriverMap> {
             )
           : GoogleMap(
               onMapCreated: ((GoogleMapController controller) =>
-                  _mapController.complete(controller)),
+                  _mapController.complete(controller)
+              ),
               initialCameraPosition: CameraPosition(
                 target: _mihinthale,
                 zoom: 13,
