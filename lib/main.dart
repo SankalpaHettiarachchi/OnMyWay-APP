@@ -1,5 +1,9 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:onmyway/blocks/autocomplete/autocomplete_block.dart';
+import 'package:onmyway/repositories/places/place_repository.dart';
 import 'package:onmyway/views/customerMap.dart';
 import 'package:onmyway/views/home.dart';
 import 'package:onmyway/views/login.dart';
@@ -18,11 +22,26 @@ class OnMyWay extends StatelessWidget {
   Widget build(BuildContext context) {
     final box = GetStorage();
     final token = box.read('token');
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "OnMyWay",
-      // home: token == null ? const Login() : const Home(),
-      home: Customer(),
-    );
+    
+    return MultiRepositoryProvider(
+        providers: [RepositoryProvider<PlacesRepository>(
+              create: (_) => PlacesRepository(),
+            ),
+        ],
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => AutoCompleteBlock(
+                  placesRepository: context.read<PlacesRepository>())
+                  ..add(LoadAutoComplete())),
+                  ],
+                  child: GetMaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    title: "OnMyWay",
+                    // home: token == null ? const Login() : const Home(),
+                    home: Customer(),
+                  ),
+            ),
+      );
   }
 }

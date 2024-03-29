@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:onmyway/blocks/autocomplete/autocomplete_block.dart';
 import 'package:onmyway/views/functions/location_services.dart';
 
 class CustomerMap extends StatefulWidget {
@@ -85,11 +87,50 @@ class MapSampleState extends State<CustomerMap> {
                       print(value);
                     },
                   ),
+                  Container(
+                    margin: const EdgeInsets.all(8),
+                    height: 150,
+                    color: Colors.black.withOpacity(0.6),
+                    child: ListView.builder(
+                      itemCount: 3,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text('placholder'),
+                        );
+                      },
+                    ),
+                  ),
                   TextFormField(
                     controller: _destinationController,
                     decoration: InputDecoration(hintText: 'End Location'),
                     onChanged: (value) {
                       print(value);
+                    },
+                  ),
+                  BlocBuilder<AutoCompleteBlock, AutoCompleteState>(
+                    builder: (context, state) {
+                      if (state is AutoCompleteLoading) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      else if (state is AutoCompleteLoaded) {
+                        Container(
+                          margin: const EdgeInsets.all(8),
+                          height: 150,
+                          color: Colors.black.withOpacity(0.6),
+                          child: ListView.builder(
+                            itemCount: 3,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text('placholder'),
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        return Text('Something Wrong..');
+                      }
                     },
                   ),
                 ],
@@ -150,11 +191,11 @@ class MapSampleState extends State<CustomerMap> {
     );
     controller.animateCamera(
       CameraUpdate.newLatLngBounds(
-        LatLngBounds(
-          southwest: LatLng(boundsSw['lat'], boundsSw['lng']),
-          northeast: LatLng(boundsNe['lat'], boundsNe['lng']),
-        ),
-        25),
+          LatLngBounds(
+            southwest: LatLng(boundsSw['lat'], boundsSw['lng']),
+            northeast: LatLng(boundsNe['lat'], boundsNe['lng']),
+          ),
+          25),
     );
     _setMarker(LatLng(lat, lng));
   }
