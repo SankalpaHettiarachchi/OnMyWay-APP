@@ -2,6 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:onmyway/components/location_list_tile.dart';
+import 'package:onmyway/components/network_utility.dart';
+import 'package:onmyway/constants/constants.dart';
+import 'package:onmyway/models/autocomplete_prediction.dart';
+import 'package:onmyway/models/place_auto_complete_response.dart';
 import 'package:onmyway/views/functions/location_services.dart';
 
 class CustomerMap extends StatefulWidget {
@@ -64,6 +69,26 @@ class MapSampleState extends State<CustomerMap> {
     );
   }
 
+  List<AutocompletePrediction> placePredictions = [];
+
+  void placeAutocomplete(String query) async {
+    Uri uri =
+        Uri.https("maps.googleapis.com", 'maps/api/place/autocomplete/json', {
+      "input": query,
+      "key": 'AIzaSyBxTN-GDUxbM30SgiKqEVrJdpZ3DrEGPyI',
+    });
+    String? response = await NetworkUtility.fetchUrl(uri);
+    if (response != null) {
+      PlaceAutocompleteResponse result =
+          PlaceAutocompleteResponse.parseAutocompleteResult(response);
+      if (result.predictions != null) {
+        setState(() {
+          placePredictions = result.predictions!;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,15 +107,41 @@ class MapSampleState extends State<CustomerMap> {
                     controller: _originController,
                     decoration: InputDecoration(hintText: 'Start Location'),
                     onChanged: (value) {
-                      print(value);
+                      placeAutocomplete(value);
                     },
                   ),
+                  const Divider(
+                    height: 4,
+                    thickness: 4,
+                    color: Colors.amberAccent,
+                  ),
+                  SingleChildScrollView(
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: placePredictions.length,
+                      itemBuilder: (context, index) => LocationListTile(
+                        press: () {},
+                        location: placePredictions[index].description!,
+                      ),
+                    ),
+                  ),
+
                   TextFormField(
                     controller: _destinationController,
                     decoration: InputDecoration(hintText: 'End Location'),
                     onChanged: (value) {
                       print(value);
                     },
+                  ),
+                  const Divider(
+                    height: 4,
+                    thickness: 4,
+                    color: Colors.amberAccent,
+                  ),
+                  LocationListTile(
+                    press: () {},
+                    location: "Anuradhapura",
                   ),
                 ],
               )),
@@ -150,11 +201,11 @@ class MapSampleState extends State<CustomerMap> {
     );
     controller.animateCamera(
       CameraUpdate.newLatLngBounds(
-        LatLngBounds(
-          southwest: LatLng(boundsSw['lat'], boundsSw['lng']),
-          northeast: LatLng(boundsNe['lat'], boundsNe['lng']),
-        ),
-        25),
+          LatLngBounds(
+            southwest: LatLng(boundsSw['lat'], boundsSw['lng']),
+            northeast: LatLng(boundsNe['lat'], boundsNe['lng']),
+          ),
+          25),
     );
     _setMarker(LatLng(lat, lng));
   }
