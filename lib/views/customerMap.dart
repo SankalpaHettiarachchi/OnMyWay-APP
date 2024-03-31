@@ -116,17 +116,19 @@ class MapSampleState extends State<CustomerMap> {
                     color: Colors.amberAccent,
                   ),
                   SingleChildScrollView(
-                    child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: placePredictions.length,
-                      itemBuilder: (context, index) => LocationListTile(
-                        press: () {},
-                        location: placePredictions[index].description!,
+                    child: SizedBox(
+                      height: 100,
+                      child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: placePredictions.length,
+                        itemBuilder: (context, index) => LocationListTile(
+                          press: () {},
+                          location: placePredictions[index].description!,
+                        ),
                       ),
                     ),
                   ),
-
                   TextFormField(
                     controller: _destinationController,
                     decoration: InputDecoration(hintText: 'End Location'),
@@ -139,9 +141,19 @@ class MapSampleState extends State<CustomerMap> {
                     thickness: 4,
                     color: Colors.amberAccent,
                   ),
-                  LocationListTile(
-                    press: () {},
-                    location: "Anuradhapura",
+                  SingleChildScrollView(
+                    child: SizedBox(
+                      height: 100,
+                      child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: placePredictions.length,
+                        itemBuilder: (context, index) => LocationListTile(
+                          press: () {},
+                          location: placePredictions[index].description!,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               )),
@@ -155,7 +167,6 @@ class MapSampleState extends State<CustomerMap> {
                     directions['bounds_ne'],
                     directions['bounds_sw'],
                   );
-
                   _setPolyline(directions['polyline_decoded']);
                 },
                 icon: Icon(
