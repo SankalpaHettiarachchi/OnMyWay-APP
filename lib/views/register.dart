@@ -98,16 +98,16 @@ class _RegisterFormleState extends State<RegisterForm> {
               height: 10,
             ),
             Obx(() {
-              return 
+              return
               _authenticationController.isLoading.value ? const CircularProgressIndicator()
               :ElevatedButton(
                   onPressed: () async{
                     await _authenticationController.register(
-                      fname: _fnameController.text.trim(), 
-                      lname: _lnameController.text.trim(), 
-                      email: _emailController.text.trim(), 
-                      phone: _phoneController.text.trim(), 
-                      password:_passwordController.text.trim(), 
+                      fname: _fnameController.text.trim(),
+                      lname: _lnameController.text.trim(),
+                      email: _emailController.text.trim(),
+                      phone: _phoneController.text.trim(),
+                      password:_passwordController.text.trim(),
                       confirmPassword: _confirmPasswordController.text.trim()
                       );
                   },
