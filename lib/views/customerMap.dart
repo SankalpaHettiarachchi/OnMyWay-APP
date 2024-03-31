@@ -22,6 +22,7 @@ class MapSampleState extends State<CustomerMap> {
   location.Location _locationController = new location.Location();
   LatLng? _currentP = null;
   bool _isListViewVisible = false;
+  bool _addBtnVisible = false;
 
   Set<Marker> _markers = Set<Marker>();
   Set<Polygon> _polygons = Set<Polygon>();
@@ -182,6 +183,7 @@ class MapSampleState extends State<CustomerMap> {
                       onChanged: (value) {
                         placeAutocomplete(value);
                         _isListViewVisible = true;
+                        _addBtnVisible = false;
                       },
                     ),
                     const Divider(
@@ -201,14 +203,16 @@ class MapSampleState extends State<CustomerMap> {
                                     itemCount: placePredictions.length,
                                     itemBuilder: (context, index) =>
                                         LocationListTile(
-                                      press: () {
-                                        setState(() {
-                                          _destinationController.text =
-                                              placePredictions[index]
-                                                  .description!;
-                                          _isListViewVisible = false;
-                                          FocusScope.of(context).unfocus();
-                                        });
+                                        press: () {
+                                          setState(() {
+                                            _destinationController.text = '';
+                                            _polylines.clear();
+                                            _destinationController.text =
+                                                placePredictions[index]
+                                                    .description!;
+                                            _isListViewVisible = false;
+                                            FocusScope.of(context).unfocus();
+                                          });
                                       },
                                       location:
                                           placePredictions[index].description!,
@@ -228,7 +232,6 @@ class MapSampleState extends State<CustomerMap> {
                 onPressed: () async {
                   var directions = await LocationService().getDirection(
                       _originController.text, _destinationController.text);
-                  String destinationAddress = _destinationController.text;
 
                   _goToCity(
                     directions['start_location']['lat'],
@@ -237,24 +240,7 @@ class MapSampleState extends State<CustomerMap> {
                     directions['bounds_sw'],
                   );
                   _setPolyline(directions['polyline_decoded']);
-
-                  try {
-                    List<Location> locations =
-                        await locationFromAddress(destinationAddress);
-                    if (locations.isNotEmpty) {
-                      Location destinationLocation = locations[0];
-                      double destinationLat = destinationLocation.latitude;
-                      double destinationLng = destinationLocation.longitude;
-
-                      _setMarker(LatLng(destinationLat,destinationLng));
-
-                    } else {
-                      print('No location found for the provided address');
-                    }
-
-                  } catch (e) {
-                    print('Error: $e');
-                  };
+                  _addBtnVisible = true;
                 },
                 icon: Icon(
                   Icons.search,

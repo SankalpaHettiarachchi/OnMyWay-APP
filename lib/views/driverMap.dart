@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:onmyway/components/location_list_tile.dart';
 import 'package:onmyway/components/network_utility.dart';
 import 'package:onmyway/constants/constants.dart';
 import 'package:onmyway/models/autocomplete_prediction.dart';
 import 'package:onmyway/models/place_auto_complete_response.dart';
+import 'package:onmyway/views/driver_requests.dart';
 import 'package:onmyway/views/functions/location_services.dart';
 import 'package:location/location.dart' as location;
 import 'package:geocoding/geocoding.dart';
@@ -22,6 +24,7 @@ class MapSampleState extends State<DriverMap> {
   location.Location _locationController = new location.Location();
   LatLng? _currentP = null;
   bool _isListViewVisible = false;
+  bool _addBtnVisible = false;
 
   Set<Marker> _markers = Set<Marker>();
   Set<Polygon> _polygons = Set<Polygon>();
@@ -82,8 +85,8 @@ class MapSampleState extends State<DriverMap> {
   }
 
   Future<void> getLocationUpdate() async {
-    bool _serviceEnabled;
     location.PermissionStatus _permissionGranted;
+    bool _serviceEnabled;
 
     _serviceEnabled = await _locationController.serviceEnabled();
     if (_serviceEnabled) {
@@ -182,6 +185,7 @@ class MapSampleState extends State<DriverMap> {
                       onChanged: (value) {
                         placeAutocomplete(value);
                         _isListViewVisible = true;
+                        _addBtnVisible = false;
                       },
                     ),
                     const Divider(
@@ -203,6 +207,7 @@ class MapSampleState extends State<DriverMap> {
                                         LocationListTile(
                                       press: () {
                                         setState(() {
+                                          _destinationController.text = '';
                                           _destinationController.text =
                                               placePredictions[index]
                                                   .description!;
@@ -228,7 +233,6 @@ class MapSampleState extends State<DriverMap> {
                 onPressed: () async {
                   var directions = await LocationService().getDirection(
                       _originController.text, _destinationController.text);
-                  String destinationAddress = _destinationController.text;
 
                   _goToCity(
                     directions['start_location']['lat'],
@@ -236,25 +240,9 @@ class MapSampleState extends State<DriverMap> {
                     directions['bounds_ne'],
                     directions['bounds_sw'],
                   );
+                  _polylines.clear();
                   _setPolyline(directions['polyline_decoded']);
-
-                  try {
-                    List<Location> locations =
-                        await locationFromAddress(destinationAddress);
-                    if (locations.isNotEmpty) {
-                      Location destinationLocation = locations[0];
-                      double destinationLat = destinationLocation.latitude;
-                      double destinationLng = destinationLocation.longitude;
-
-                      _setMarker(LatLng(destinationLat,destinationLng));
-
-                    } else {
-                      print('No location found for the provided address');
-                    }
-
-                  } catch (e) {
-                    print('Error: $e');
-                  };
+                  _addBtnVisible = true;
                 },
                 icon: Icon(
                   Icons.search,
@@ -262,11 +250,22 @@ class MapSampleState extends State<DriverMap> {
               ),
             ],
           ),
-          Row(
-            children: [
-              ElevatedButton(
-                  onPressed: () {}, child: const Text("Find a Service")),
-            ],
+          Builder(
+            builder: (BuildContext context) {
+              return _addBtnVisible
+                  ? Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              Get.to(() => const DriverRequest());
+                            },
+                            child: const Text("Add the Service")),
+                      ],
+                    )
+                  : SizedBox(
+                      height: 0,
+                    );
+            },
           ),
           Expanded(
             child: GoogleMap(

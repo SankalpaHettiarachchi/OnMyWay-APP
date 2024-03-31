@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:onmyway/views/addService.dart';
 import 'package:onmyway/views/customerMap.dart';
+import 'package:onmyway/views/driver.dart';
+import 'package:onmyway/views/driverMap.dart';
 import 'package:onmyway/views/home.dart';
 import 'package:onmyway/views/login.dart';
 import 'package:onmyway/views/home.dart';
@@ -22,7 +25,7 @@ class OnMyWay extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "OnMyWay",
       home: token == null ? const Login() : const Home(),
-      // home: Customer(),
+      // home: AddService(),
     );
   }
 }
