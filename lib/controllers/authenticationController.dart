@@ -8,6 +8,8 @@ import 'package:onmyway/views/home.dart';
 import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
 
+import 'package:onmyway/views/login.dart';
+
 class AuthenticationController extends GetxController {
   final isLoading = false.obs;
   final token = ''.obs;
@@ -29,6 +31,7 @@ class AuthenticationController extends GetxController {
         'email': email,
         'phone': phone,
         'password': password,
+        'con_password': confirmPassword,
       };
 
       var response = await http.post(
@@ -42,13 +45,17 @@ class AuthenticationController extends GetxController {
       if (response.statusCode == 201) {
         isLoading.value = false;
         debugPrint(response.body);
+        Get.offAll(() => const Login());
+        return null;
+
       } else {
         isLoading.value = false;
-        debugPrint(response.body);
+        return json.decode(response.body)['message'];
+
       }
     } catch (e) {
       isLoading.value = false;
-      debugPrint(e.toString());
+      return (e.toString());
     }
   }
 
@@ -77,19 +84,19 @@ class AuthenticationController extends GetxController {
         token.value = json.decode(response.body)['token'];
         box.write('token', token.value);
         Get.offAll(() => const Home());
+        return null;
+
       } else {
         isLoading.value = false;
-        debugPrint(response.body);
+        return json.decode(response.body)['message'];
       }
     } catch (e) {
       isLoading.value = false;
-      debugPrint(e.toString());
+      return (e.toString());
     }
   }
 
-  Future driverAuthentcation() 
-  async 
-  {
+  Future driverAuthentcation() async {
     try {
       isLoading.value = true;
       var response = await http.post(
@@ -110,7 +117,6 @@ class AuthenticationController extends GetxController {
         } else {
           Get.offAll(() => const Driver());
         }
-
       } else {
         isLoading.value = false;
       }

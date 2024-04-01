@@ -102,7 +102,7 @@ class _RegisterFormleState extends State<RegisterForm> {
               _authenticationController.isLoading.value ? const CircularProgressIndicator()
               :ElevatedButton(
                   onPressed: () async{
-                    await _authenticationController.register(
+                    String? errorMessage = await _authenticationController.register(
                       fname: _fnameController.text.trim(),
                       lname: _lnameController.text.trim(),
                       email: _emailController.text.trim(),
@@ -110,6 +110,15 @@ class _RegisterFormleState extends State<RegisterForm> {
                       password:_passwordController.text.trim(),
                       confirmPassword: _confirmPasswordController.text.trim()
                       );
+
+                    if (errorMessage != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(errorMessage),
+                          backgroundColor: Colors.redAccent,
+                        ),
+                      );
+                    }
                   },
                   child: const Text("Register"));
               

@@ -64,16 +64,24 @@ class _LoginFormState extends State<LoginForm> {
               height: 10,
             ),
             Obx(() {
-              return 
+              return
               _authenticationController.isLoading.value ? const CircularProgressIndicator()
               :ElevatedButton(
                   onPressed: () async{
-                    await _authenticationController.login(
-                      email: _emailController.text.trim(), 
-                      password:_passworcontroller.text.trim(), 
+                    String? errorMessage = await _authenticationController.login(
+                      email: _emailController.text.trim(),
+                      password: _passworcontroller.text.trim(),
+                    );
+                    if (errorMessage != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(errorMessage),
+                          backgroundColor: Colors.redAccent,
+                        ),
                       );
+                    }
                   },
-                  child: const Text("Login")); 
+                  child: const Text("Login"));
             }),
             ElevatedButton(
                 onPressed: () {
