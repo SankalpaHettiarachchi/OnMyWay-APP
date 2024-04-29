@@ -36,83 +36,57 @@ class _LoginFormState extends State<LoginForm> {
   final AuthenticationController _authenticationController =
       Get.put(AuthenticationController());
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 50),
-            // Sample Logo
-            Image.asset(
-              'assets/logo.png', // Replace 'logo.png' with your actual logo asset
-              height: 150,
-              width: 150,
+            const Text('Login Form'),
+            const SizedBox(
+              height: 10,
             ),
-            SizedBox(height: 20),
-            const Text(
-              'Login Form',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+            InputWidget(
+              hintText: 'Email',
+              controller: _emailController,
+              obscureText: false,
             ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  // Email Input
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: 'Email',
-                      prefixIcon: Icon(Icons.email),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  // Password Input
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      prefixIcon: Icon(Icons.lock),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  // Login Button
-                  ElevatedButton(
-                    onPressed: () {
-                      // Add login functionality
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Text(
-                        "Login",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  // Register Button
-                  OutlinedButton(
-                    onPressed: () {
-                      // Navigate to the registration screen
-                      Navigator.pushNamed(context, '/register');
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Text(
-                        "Register",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            const SizedBox(
+              height: 10,
             ),
+            InputWidget(
+              hintText: 'Password',
+              controller: _passworcontroller,
+              obscureText: false,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Obx(() {
+              return
+              _authenticationController.isLoading.value ? const CircularProgressIndicator()
+              :ElevatedButton(
+                  onPressed: () async{
+                    String? errorMessage = await _authenticationController.login(
+                      email: _emailController.text.trim(),
+                      password: _passworcontroller.text.trim(),
+                    );
+                    if (errorMessage != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(errorMessage),
+                          backgroundColor: Colors.redAccent,
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text("Login"));
+            }),
+            ElevatedButton(
+                onPressed: () {
+                  Get.to(() => const Register());
+                },
+                child: const Text("Register")),
           ],
         ),
       ),
